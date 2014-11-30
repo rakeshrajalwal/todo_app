@@ -1,0 +1,58 @@
+<title>Todo App </title>
+<div class="container">
+  <div class="row">
+    <div class="span4">
+      <h1>Todo App</h1>
+      <hr>
+      <p>All your todos here</p>
+
+<% if flash[:error] %>
+ <div class="alert alert-error">
+    <button type="button" class="close" data-dismiss="alert" ></button>
+    <strong><%= flash[:error] %></strong>
+    </div>
+<% end %>
+
+<% if flash[:success] %>
+   <div class="alert alert-success">
+    <%=flash[:success]%> 
+   </div>
+  <% end %>
+<%= form_for @new_todo, :url => { :action => "add" }  do |f|  %>
+    <%= f.text_field  :todo_item %>
+    <%= f.submit "Add todo", class: "btn btn-primary" %>
+ <%end%>
+
+
+      <div class="well">
+<%= form_tag("/todos/complete/", :method => "post") do %>
+<ul style="list-style-type:none;">
+<% @todo_items.each do |t| %> 
+ <% if t.completed == true %>
+     <li style="color:grey;"> <%= check_box_tag  "todos_checkbox[]",t.id %>  <strike><%= t.todo_item %></strike> </li>
+  <% else %>
+     <li> <%= check_box_tag  "todos_checkbox[]",t.id %> <%= t.todo_item %>  </li>
+  <% end %>
+<%end%>
+</ul>
+<%= submit_tag("Complete Todos", :class=>"btn btn-success") %>
+<%end %>   
+
+<%= form_tag("/todos/delete/", :method => "post") do %>
+<ul style="list-style-type:none;">
+<% @todo_items.each do |t| %>
+     <li> <%= check_box_tag  "todos_checkbox[]",t.id %> <%= t.todo_item %>  </li>
+<%end%>
+</ul>
+<%= submit_tag("Delete Todos", :class=>"btn btn-success") %>
+<%end %>
+
+<%= form_tag("/todos/upload/", multipart: true,:method => "post") do %>
+  <%= file_field_tag 'picture' %>
+<%= submit_tag("Upload", :class=>"btn btn-success") %>
+<% end %>
+
+</div> <!-- well -->
+    </div> <!-- span4 -->
+  </div> <!-- row -->
+</div> <!-- container -->
